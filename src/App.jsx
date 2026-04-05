@@ -3,6 +3,20 @@ import React, { useState, useEffect } from 'react';
 export default function CartaAntigua() {
   const [stage, setStage] = useState(0);
 
+  // --- NUEVO: Cambiar título y favicon (icono de la pestaña) ---
+  useEffect(() => {
+    document.title = "Invitación Boda Gemma y Miguel 2027";
+    
+    let link = document.querySelector("link[rel~='icon']");
+    if (!link) {
+      link = document.createElement('link');
+      link.rel = 'icon';
+      document.head.appendChild(link);
+    }
+    // Icono de corazón rojo estilo WhatsApp
+    link.href = 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y=".9em" font-size="90">❤️</text></svg>';
+  }, []);
+
   useEffect(() => {
     if (stage === 1) {
       const timer = setTimeout(() => setStage(2), 800);
@@ -14,7 +28,6 @@ export default function CartaAntigua() {
       const timer = setTimeout(() => setStage(4), 1200);
       return () => clearTimeout(timer);
     }
-    // En la fase 4 ya no redirigimos, simplemente la carta se retira y deja ver la imagen.
   }, [stage]);
 
   const customStyles = `
@@ -96,7 +109,7 @@ export default function CartaAntigua() {
   `;
 
   return (
-    <div
+    <div 
       className="fixed inset-0 bg-[#0a0a0a] flex items-center justify-center overflow-hidden font-serif-classic selection:bg-amber-900 selection:text-amber-100"
       style={{ perspective: '1200px' }}
     >
@@ -105,33 +118,28 @@ export default function CartaAntigua() {
       {/* Luz focal en el fondo para destacar los elementos */}
       <div className="absolute w-[150vw] h-[150vw] md:w-[800px] md:h-[800px] bg-stone-700/10 rounded-full blur-[80px] pointer-events-none"></div>
 
-      {/* LA IMAGEN REVELADA (Aparece cuando el sobre cae) */}
-      {/* LA IMAGEN REVELADA */}
-      <div
+      {/* LA IMAGEN REVELADA (Con el estilo visibility añadido para garantizar secreto total) */}
+      <div 
         className={`absolute inset-0 flex items-center justify-center p-4 sm:p-8 transition-all duration-[1500ms] ease-[cubic-bezier(0.4,0,0.2,1)] z-10 ${
-          stage === 4
-            ? 'opacity-100 scale-100'
-            : 'opacity-0 scale-95 pointer-events-none'
+          stage === 4 ? 'opacity-100 scale-100' : 'opacity-0 scale-95 pointer-events-none'
         }`}
+        style={{ visibility: stage === 4 ? 'visible' : 'hidden' }} // <--- ¡ESTA ES LA LÍNEA MÁGICA!
       >
-        <img
-          src="https://i.postimg.cc/Y2nngB6h/1.jpg"
-          alt="Invitación Gemma y Miguel"
+        <img 
+          src="https://i.postimg.cc/Y2nngB6h/1.jpg" 
+          alt="Invitación Gemma y Miguel" 
           className="max-w-full max-h-full object-contain rounded-sm shadow-[0_20px_60px_rgba(0,0,0,0.8)]"
         />
       </div>
 
       {/* EL SOBRE CON CORTE BARONIAL */}
-      <div
+      <div 
         className="relative z-50 w-[92vw] max-w-[800px] aspect-[1.45/1] transition-all duration-1000 ease-[cubic-bezier(0.5,0,0.2,1)] mt-8"
-        style={{
+        style={{ 
           transformStyle: 'preserve-3d',
-          transform:
-            stage === 4
-              ? 'translateY(120vh) rotate(-5deg)'
-              : 'translateY(0) rotate(0deg)',
+          transform: stage === 4 ? 'translateY(120vh) rotate(-5deg)' : 'translateY(0) rotate(0deg)',
           opacity: stage === 4 ? 0 : 1,
-          pointerEvents: stage === 4 ? 'none' : 'auto',
+          pointerEvents: stage === 4 ? 'none' : 'auto'
         }}
       >
         <div className="absolute inset-0 envelope-inside rounded-sm z-10"></div>
@@ -144,32 +152,14 @@ export default function CartaAntigua() {
             transform: stage >= 3 ? 'rotateY(-180deg)' : 'rotateY(0deg)',
             zIndex: stage >= 3 ? 12 : 20,
             transformStyle: 'preserve-3d',
-            filter:
-              stage >= 3 ? 'none' : 'drop-shadow(3px 0px 8px rgba(0,0,0,0.5))',
+            filter: stage >= 3 ? 'none' : 'drop-shadow(3px 0px 8px rgba(0,0,0,0.5))'
           }}
         >
-          <div
-            className="absolute inset-0 theme-paper rounded-l-sm"
-            style={{
-              clipPath:
-                'polygon(0 0, 15% 0, 46% 46%, 46% 54%, 15% 100%, 0 100%)',
-              backfaceVisibility: 'hidden',
-              WebkitBackfaceVisibility: 'hidden',
-            }}
-          >
+          <div className="absolute inset-0 theme-paper rounded-l-sm" style={{ clipPath: 'polygon(0 0, 15% 0, 46% 46%, 46% 54%, 15% 100%, 0 100%)', backfaceVisibility: 'hidden', WebkitBackfaceVisibility: 'hidden' }}>
             <div className="absolute inset-0 bg-gradient-to-r from-black/20 to-transparent"></div>
           </div>
-          <div
-            className="absolute inset-0 flap-inside rounded-l-sm"
-            style={{
-              transformOrigin: 'left center',
-              transform: 'rotateY(180deg)',
-              clipPath:
-                'polygon(0 0, 15% 0, 46% 46%, 46% 54%, 15% 100%, 0 100%)',
-              backfaceVisibility: 'hidden',
-              WebkitBackfaceVisibility: 'hidden',
-            }}
-          ></div>
+          <div className="absolute inset-0 flap-inside rounded-l-sm" style={{ transformOrigin: 'left center', transform: 'rotateY(180deg)', clipPath: 'polygon(0 0, 15% 0, 46% 46%, 46% 54%, 15% 100%, 0 100%)', backfaceVisibility: 'hidden', WebkitBackfaceVisibility: 'hidden' }}>
+          </div>
         </div>
 
         {/* SOLAPA DERECHA */}
@@ -180,32 +170,14 @@ export default function CartaAntigua() {
             transform: stage >= 3 ? 'rotateY(180deg)' : 'rotateY(0deg)',
             zIndex: stage >= 3 ? 12 : 20,
             transformStyle: 'preserve-3d',
-            filter:
-              stage >= 3 ? 'none' : 'drop-shadow(-3px 0px 8px rgba(0,0,0,0.5))',
+            filter: stage >= 3 ? 'none' : 'drop-shadow(-3px 0px 8px rgba(0,0,0,0.5))'
           }}
         >
-          <div
-            className="absolute inset-0 theme-paper rounded-r-sm"
-            style={{
-              clipPath:
-                'polygon(100% 0, 85% 0, 54% 46%, 54% 54%, 85% 100%, 100% 100%)',
-              backfaceVisibility: 'hidden',
-              WebkitBackfaceVisibility: 'hidden',
-            }}
-          >
+          <div className="absolute inset-0 theme-paper rounded-r-sm" style={{ clipPath: 'polygon(100% 0, 85% 0, 54% 46%, 54% 54%, 85% 100%, 100% 100%)', backfaceVisibility: 'hidden', WebkitBackfaceVisibility: 'hidden' }}>
             <div className="absolute inset-0 bg-gradient-to-l from-black/20 to-transparent"></div>
           </div>
-          <div
-            className="absolute inset-0 flap-inside rounded-r-sm"
-            style={{
-              transformOrigin: 'right center',
-              transform: 'rotateY(180deg)',
-              clipPath:
-                'polygon(100% 0, 85% 0, 54% 46%, 54% 54%, 85% 100%, 100% 100%)',
-              backfaceVisibility: 'hidden',
-              WebkitBackfaceVisibility: 'hidden',
-            }}
-          ></div>
+          <div className="absolute inset-0 flap-inside rounded-r-sm" style={{ transformOrigin: 'right center', transform: 'rotateY(180deg)', clipPath: 'polygon(100% 0, 85% 0, 54% 46%, 54% 54%, 85% 100%, 100% 100%)', backfaceVisibility: 'hidden', WebkitBackfaceVisibility: 'hidden' }}>
+          </div>
         </div>
 
         {/* SOLAPA INFERIOR */}
@@ -216,34 +188,14 @@ export default function CartaAntigua() {
             transform: stage >= 2 ? 'rotateX(-180deg)' : 'rotateX(0deg)',
             zIndex: stage >= 2 ? 14 : 30,
             transformStyle: 'preserve-3d',
-            filter:
-              stage >= 2
-                ? 'none'
-                : 'drop-shadow(0px -4px 10px rgba(0,0,0,0.6))',
+            filter: stage >= 2 ? 'none' : 'drop-shadow(0px -4px 10px rgba(0,0,0,0.6))'
           }}
         >
-          <div
-            className="absolute inset-0 theme-paper rounded-b-sm"
-            style={{
-              clipPath:
-                'polygon(0 100%, 100% 100%, 100% 85%, 56% 44%, 44% 44%, 0 85%)',
-              backfaceVisibility: 'hidden',
-              WebkitBackfaceVisibility: 'hidden',
-            }}
-          >
+          <div className="absolute inset-0 theme-paper rounded-b-sm" style={{ clipPath: 'polygon(0 100%, 100% 100%, 100% 85%, 56% 44%, 44% 44%, 0 85%)', backfaceVisibility: 'hidden', WebkitBackfaceVisibility: 'hidden' }}>
             <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-white/10"></div>
           </div>
-          <div
-            className="absolute inset-0 flap-inside rounded-b-sm"
-            style={{
-              transformOrigin: 'bottom center',
-              transform: 'rotateX(180deg)',
-              clipPath:
-                'polygon(0 100%, 100% 100%, 100% 85%, 56% 44%, 44% 44%, 0 85%)',
-              backfaceVisibility: 'hidden',
-              WebkitBackfaceVisibility: 'hidden',
-            }}
-          ></div>
+          <div className="absolute inset-0 flap-inside rounded-b-sm" style={{ transformOrigin: 'bottom center', transform: 'rotateX(180deg)', clipPath: 'polygon(0 100%, 100% 100%, 100% 85%, 56% 44%, 44% 44%, 0 85%)', backfaceVisibility: 'hidden', WebkitBackfaceVisibility: 'hidden' }}>
+          </div>
         </div>
 
         {/* SOLAPA SUPERIOR */}
@@ -254,33 +206,15 @@ export default function CartaAntigua() {
             transform: stage >= 1 ? 'rotateX(180deg)' : 'rotateX(0deg)',
             zIndex: stage >= 1 ? 16 : 40,
             transformStyle: 'preserve-3d',
-            filter:
-              stage >= 1 ? 'none' : 'drop-shadow(0px 8px 15px rgba(0,0,0,0.7))',
+            filter: stage >= 1 ? 'none' : 'drop-shadow(0px 8px 15px rgba(0,0,0,0.7))'
           }}
         >
-          <div
-            className="absolute inset-0 theme-paper rounded-t-sm"
-            style={{
-              clipPath:
-                'polygon(0 0, 100% 0, 100% 15%, 56% 56%, 44% 56%, 0 15%)',
-              backfaceVisibility: 'hidden',
-              WebkitBackfaceVisibility: 'hidden',
-            }}
-          >
-            <div className="absolute top-0 w-full h-12 bg-gradient-to-b from-white/10 to-transparent"></div>
-            <div className="absolute bottom-0 w-full h-1/2 bg-gradient-to-t from-black/30 to-transparent"></div>
-          </div>
-          <div
-            className="absolute inset-0 flap-inside rounded-t-sm"
-            style={{
-              transformOrigin: 'top center',
-              transform: 'rotateX(180deg)',
-              clipPath:
-                'polygon(0 0, 100% 0, 100% 15%, 56% 56%, 44% 56%, 0 15%)',
-              backfaceVisibility: 'hidden',
-              WebkitBackfaceVisibility: 'hidden',
-            }}
-          ></div>
+           <div className="absolute inset-0 theme-paper rounded-t-sm" style={{ clipPath: 'polygon(0 0, 100% 0, 100% 15%, 56% 56%, 44% 56%, 0 15%)', backfaceVisibility: 'hidden', WebkitBackfaceVisibility: 'hidden' }}>
+              <div className="absolute top-0 w-full h-12 bg-gradient-to-b from-white/10 to-transparent"></div>
+              <div className="absolute bottom-0 w-full h-1/2 bg-gradient-to-t from-black/30 to-transparent"></div>
+           </div>
+           <div className="absolute inset-0 flap-inside rounded-t-sm" style={{ transformOrigin: 'top center', transform: 'rotateX(180deg)', clipPath: 'polygon(0 0, 100% 0, 100% 15%, 56% 56%, 44% 56%, 0 15%)', backfaceVisibility: 'hidden', WebkitBackfaceVisibility: 'hidden' }}>
+           </div>
         </div>
 
         {/* SELLO DE CERA */}
@@ -288,16 +222,11 @@ export default function CartaAntigua() {
           className="absolute left-1/2 z-50 transition-all duration-1000 ease-in-out cursor-pointer"
           style={{
             top: '55%',
-            transform:
-              stage >= 1
-                ? 'translate(-50%, -200px) scale(0.8)'
-                : 'translate(-50%, -50%) scale(1)',
+            transform: stage >= 1 ? 'translate(-50%, -200px) scale(0.8)' : 'translate(-50%, -50%) scale(1)',
             opacity: stage >= 1 ? 0 : 1,
-            pointerEvents: stage >= 1 ? 'none' : 'auto',
+            pointerEvents: stage >= 1 ? 'none' : 'auto'
           }}
-          onClick={() => {
-            if (stage === 0) setStage(1);
-          }}
+          onClick={() => { if (stage === 0) setStage(1); }}
         >
           <div className="custom-seal transform transition-transform duration-300 hover:scale-[1.03]">
             <div className="custom-seal-inner">
