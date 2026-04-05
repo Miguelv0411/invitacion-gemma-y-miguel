@@ -3,12 +3,12 @@ import React, { useState, useEffect } from 'react';
 export default function CartaAntigua() {
   const [stage, setStage] = useState(0);
 
-  // Pon tu enlace de la foto aquí para que sirva tanto para verla como para descargarla
-  const ENLACE_IMAGEN = "https://i.postimg.cc/Y2nngB6h/1.jpg";
+  // Usamos el archivo local para evitar bloqueos de seguridad del navegador y que se descargue directamente
+  const ENLACE_IMAGEN = "BodaG&M.JPG";
 
   // --- Cambiar título y favicon (icono de la pestaña) ---
   useEffect(() => {
-    document.title = "Invitación Boda Gemma y Miguel 2027";
+    document.title = "Invitación Boda Gemma y Miguel";
     
     let link = document.querySelector("link[rel~='icon']");
     if (!link) {
@@ -16,7 +16,6 @@ export default function CartaAntigua() {
       link.rel = 'icon';
       document.head.appendChild(link);
     }
-    // Icono de corazón rojo estilo WhatsApp
     link.href = 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y=".9em" font-size="90">❤️</text></svg>';
   }, []);
 
@@ -33,13 +32,34 @@ export default function CartaAntigua() {
     }
   }, [stage]);
 
+  // --- NUEVA FUNCIÓN: Forzar descarga de la imagen ---
+  const descargarImagen = async (e) => {
+    e.preventDefault();
+    try {
+      // Intentamos "descargar" la imagen en segundo plano y crear un archivo local
+      const response = await fetch(ENLACE_IMAGEN);
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = "Invitación Boda Gemma & Miguel 24-04-2027.jpg"; // Nombre del archivo descargado
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      // Si el servidor de la imagen bloquea la descarga invisible, abrimos la foto directamente
+      window.open(ENLACE_IMAGEN, '_blank');
+    }
+  };
+
   const customStyles = `
     @import url('https://fonts.googleapis.com/css2?family=Great+Vibes&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap');
 
     .font-script { font-family: 'Great Vibes', cursive; }
     .font-serif-classic { font-family: 'Playfair Display', serif; }
 
-    /* Textura de papel FIJADA a Rojo Granate */
     .theme-paper {
       background-color: #2c0e12; 
       background-image: 
@@ -47,7 +67,6 @@ export default function CartaAntigua() {
         url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.08'/%3E%3C/svg%3E");
     }
 
-    /* Interior base del sobre (Blanco Pergamino profundo) */
     .envelope-inside {
       background-color: #fdfbf7;
       background-image: 
@@ -56,14 +75,12 @@ export default function CartaAntigua() {
       box-shadow: inset 0 15px 40px rgba(0,0,0,0.6), inset 0 0 20px rgba(0,0,0,0.2);
     }
 
-    /* Solapas interiores base (Blanco Pergamino iluminado) */
     .flap-inside {
       background-color: #fdfbf7;
       background-image: 
         url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.04'/%3E%3C/svg%3E");
     }
 
-    /* --- SELLO DE CERA FIJADO A ORO CLÁSICO --- */
     .custom-seal {
       width: 90px; 
       height: 90px;
@@ -118,7 +135,6 @@ export default function CartaAntigua() {
     >
       <style>{customStyles}</style>
 
-      {/* Luz focal en el fondo para destacar los elementos */}
       <div className="absolute w-[150vw] h-[150vw] md:w-[800px] md:h-[800px] bg-stone-700/10 rounded-full blur-[80px] pointer-events-none"></div>
 
       {/* LA IMAGEN REVELADA */}
@@ -134,13 +150,10 @@ export default function CartaAntigua() {
           className="max-w-full max-h-[85vh] object-contain rounded-sm shadow-[0_20px_60px_rgba(0,0,0,0.8)]"
         />
         
-        {/* BOTÓN DE DESCARGA (Aparece un segundo después de revelar la imagen) */}
-        <a 
-          href={ENLACE_IMAGEN}
-          download="Invitacion-Boda-Gemma-y-Miguel.jpg"
-          target="_blank"
-          rel="noopener noreferrer"
-          className={`mt-6 flex items-center gap-2 px-6 py-3 bg-white/10 hover:bg-white/20 backdrop-blur-md border border-white/20 rounded-full text-white/90 font-serif-classic text-xs sm:text-sm tracking-widest uppercase transition-all duration-1000 delay-1000 shadow-[0_4px_15px_rgba(0,0,0,0.5)] hover:scale-105 active:scale-95 ${
+        {/* BOTÓN DE DESCARGA FORZADA */}
+        <button 
+          onClick={descargarImagen}
+          className={`mt-6 flex items-center gap-2 px-6 py-3 bg-white/10 hover:bg-white/20 backdrop-blur-md border border-white/20 rounded-full text-white/90 font-serif-classic text-xs sm:text-sm tracking-widest uppercase transition-all duration-1000 delay-1000 shadow-[0_4px_15px_rgba(0,0,0,0.5)] hover:scale-105 active:scale-95 cursor-pointer ${
             stage === 4 ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4 pointer-events-none'
           }`}
         >
@@ -151,7 +164,7 @@ export default function CartaAntigua() {
             <line x1="12" x2="12" y1="15" y2="3"/>
           </svg>
           Guardar Invitación
-        </a>
+        </button>
       </div>
 
       {/* CONTENEDOR EXTERNO DE ANIMACIÓN (Maneja la caída final del sobre) */}
@@ -165,9 +178,9 @@ export default function CartaAntigua() {
         }}
       >
         
-        {/* EL SOBRE CON CORTE BARONIAL Y ORIENTACIÓN RESPONSIVA (Rotado solo en móvil) */}
+        {/* EL SOBRE HORIZONTAL CLÁSICO */}
         <div 
-          className="relative aspect-[1.45/1] w-[140vw] rotate-90 sm:w-[92vw] sm:max-w-[800px] sm:rotate-0 transition-transform duration-700 mt-0 sm:mt-8"
+          className="relative aspect-[1.45/1] w-[92vw] max-w-[800px] transition-transform duration-1000 mt-8"
           style={{ transformStyle: 'preserve-3d' }}
         >
           <div className="absolute inset-0 envelope-inside rounded-sm z-10"></div>
@@ -258,8 +271,7 @@ export default function CartaAntigua() {
           >
             <div className="custom-seal transform transition-transform duration-300 hover:scale-[1.03]">
               <div className="custom-seal-inner">
-                {/* Añadimos -rotate-90 para móvil y rotate-0 para tablet/PC, así las letras siempre se leen rectas */}
-                <span className="stamped-text font-script pr-1 inline-block -rotate-90 sm:rotate-0 transition-transform duration-700">
+                <span className="stamped-text font-script pr-1">
                   G<span className="text-sm md:text-lg mx-0.5">&</span>M
                 </span>
               </div>
