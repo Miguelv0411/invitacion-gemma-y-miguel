@@ -2,9 +2,13 @@ import React, { useState, useEffect } from 'react';
 
 export default function CartaAntigua() {
   const [stage, setStage] = useState(0);
+  const [isLoaded, setIsLoaded] = useState(false);
 
-  // Reemplaza esto con tu enlace directo de Postimages (el que termina en .jpg)
-  const ENLACE_IMAGEN = "BodaG&M.jpg";
+  // --- IMPORTANTE: El simulador web no lee archivos locales. ---
+  // 1. Sube tu precioso collage a https://postimages.org/
+  // 2. Copia el "Enlace directo" (debe terminar en .jpg)
+  // 3. Pégalo aquí abajo entre las comillas sustituyendo al de prueba:
+  const ENLACE_IMAGEN = "https://i.postimg.cc/MHdq9psT/24-04-2027.jpg";
 
   // --- Cambiar título y favicon (icono de la pestaña) ---
   useEffect(() => {
@@ -20,15 +24,19 @@ export default function CartaAntigua() {
     link.href = 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y=".9em" font-size="90">❤️</text></svg>';
   }, []);
 
+  // --- ESPERAR A QUE LAS FUENTES CARGUEN PARA EVITAR EL "SALTO" VISUAL ---
+  useEffect(() => {
+    document.fonts.ready.then(() => {
+      setIsLoaded(true);
+    });
+  }, []);
+
+  // --- SECUENCIA DE APERTURA LENTA Y CINEMATOGRÁFICA ---
   useEffect(() => {
     if (stage === 1) {
-      const timer = setTimeout(() => setStage(2), 800);
-      return () => clearTimeout(timer);
-    } else if (stage === 2) {
-      const timer = setTimeout(() => setStage(3), 150);
-      return () => clearTimeout(timer);
-    } else if (stage === 3) {
-      const timer = setTimeout(() => setStage(4), 1200);
+      // La solapa tarda 2s en abrirse. La pantalla blanca tarda 1s extra en rellenarse.
+      // Total de la secuencia antes de revelar la foto = 3 segundos (3000ms).
+      const timer = setTimeout(() => setStage(2), 3000);
       return () => clearTimeout(timer);
     }
   }, [stage]);
@@ -92,10 +100,6 @@ export default function CartaAntigua() {
       position: relative;
     }
 
-    @media (min-width: 768px) {
-      .custom-seal { width: 110px; height: 110px; }
-    }
-
     .custom-seal-inner {
       position: absolute;
       top: 14%; left: 14%; right: 14%; bottom: 14%;
@@ -112,170 +116,273 @@ export default function CartaAntigua() {
     }
 
     .stamped-text {
-      color: #5e4204;
+      color: #3d2b02; /* Color ligeramente más oscuro para mayor contraste */
       text-shadow: 
-        -1px -1px 1px rgba(0,0,0,0.8), 
-        1px 1px 1px rgba(255,255,255,0.25); 
+        -0.5px -0.5px 0px rgba(0,0,0,0.9), /* Desenfoque a 0px para máxima nitidez */
+        0.5px 0.5px 0px rgba(255,255,255,0.4); /* Desenfoque a 0px para máxima nitidez */
       font-size: 1.1rem; 
       line-height: 1;
       margin-top: 2px;
       letter-spacing: -1px;
     }
 
+    /* --- SISTEMA TOTALMENTE RESPONSIVE (Cálculo matemático exacto) --- */
+    
+    /* 1. MÓVILES (Por defecto) - Scale 2.2 */
+    .macro-zoom { transform: scale(2.2); }
+    .invite-text-container { top: 68%; }
+    .invite-text-1 { font-size: 1.1rem; } /* Letra más grande y presente */
+    .invite-text-2 { font-size: 0.85rem; margin-top: 2px; } 
+    .custom-seal { width: 70px; height: 70px; } /* Sello más realista y delicado */
+    .stamped-text { font-size: 0.9rem; }
+    
+    /* 2. MÓVILES GRANDES / TABLETS VERTICALES - Scale 2.5 */
+    @media (min-width: 480px) {
+      .macro-zoom { transform: scale(2.5); } 
+      .custom-seal { width: 65px; height: 65px; }
+      .stamped-text { font-size: 0.85rem; }
+      .invite-text-container { top: 66%; } 
+      .invite-text-1 { font-size: 1rem; } 
+      .invite-text-2 { font-size: 0.75rem; margin-top: 2px; } 
+    }
+
+    /* 3. TABLETS (Landscape) / PANTALLAS PEQUEÑAS - Scale 2.8 */
     @media (min-width: 768px) {
-      .stamped-text { font-size: 1.4rem; }
+      .macro-zoom { transform: scale(2.8); } 
+      .custom-seal { width: 55px; height: 55px; }
+      .stamped-text { font-size: 0.75rem; }
+      .invite-text-container { top: 64%; } 
+      .invite-text-1 { font-size: 0.85rem; } 
+      .invite-text-2 { font-size: 0.65rem; margin-top: 3px; } 
+    }
+    
+    /* 4. PORTÁTILES Y ESCRITORIOS ESTÁNDAR - Scale 3.5 */
+    @media (min-width: 1024px) {
+      .macro-zoom { transform: scale(3.5); } 
+      .custom-seal { width: 45px; height: 45px; }
+      .stamped-text { font-size: 0.6rem; }
+      .invite-text-container { top: 61%; } 
+      .invite-text-1 { font-size: 0.7rem; } 
+      .invite-text-2 { font-size: 0.5rem; margin-top: 4px; } 
+    }
+
+    /* 5. MONITORES 1440p / MACBOOKS - Scale 4.5 */
+    @media (min-width: 1440px) {
+      .macro-zoom { transform: scale(4.5); } 
+      .custom-seal { width: 36px; height: 36px; }
+      .stamped-text { font-size: 0.5rem; }
+      .invite-text-container { top: 59%; } 
+      .invite-text-1 { font-size: 0.55rem; } 
+      .invite-text-2 { font-size: 0.4rem; margin-top: 5px; } 
+    }
+    
+    /* 6. MONITORES 4K Y ULTRAWIDE - Scale 5.5 */
+    @media (min-width: 1920px) {
+      .macro-zoom { transform: scale(5.5); } 
+      .custom-seal { width: 30px; height: 30px; }
+      .stamped-text { font-size: 0.4rem; }
+      .invite-text-container { top: 57%; } 
+      .invite-text-1 { font-size: 0.45rem; } 
+      .invite-text-2 { font-size: 0.35rem; margin-top: 6px; } 
+    }
+
+    /* 7. PROTECCIÓN PARA MÓVILES EN HORIZONTAL (Landscape) */
+    /* Evita que el texto se salga por el borde inferior si la pantalla tiene muy poca altura */
+    @media (max-height: 500px) and (orientation: landscape) {
+      .invite-text-container { top: 56%; } 
+      .invite-text-1 { font-size: 0.8rem; }
+      .invite-text-2 { font-size: 0.6rem; }
     }
   `;
 
   return (
     <div 
-      className="fixed inset-0 bg-[#0a0a0a] flex items-center justify-center overflow-hidden font-serif-classic selection:bg-amber-900 selection:text-amber-100"
+      className={`fixed inset-0 bg-white flex items-center justify-center overflow-hidden font-serif-classic selection:bg-stone-200 selection:text-stone-800 transition-opacity duration-700 ${isLoaded ? 'opacity-100' : 'opacity-0'}`}
       style={{ perspective: '1200px' }}
     >
       <style>{customStyles}</style>
 
-      {/* Luz focal en el fondo */}
-      <div className="absolute w-[150vw] h-[150vw] md:w-[800px] md:h-[800px] bg-stone-700/10 rounded-full blur-[80px] pointer-events-none"></div>
+      {/* Luz focal en el fondo claro para dar volumen */}
+      <div className="absolute w-[150vw] h-[150vw] md:w-[800px] md:h-[800px] bg-stone-50 rounded-full blur-[90px] pointer-events-none"></div>
+
+      {/* PANTALLA BLANCA DE TRANSICIÓN (FADE TO WHITE) */}
+      <div 
+        className="fixed inset-0 bg-white z-[60] pointer-events-none"
+        style={{
+          opacity: stage >= 1 ? 1 : 0,
+          /* Se enciende progresivamente. Espera 1000ms (1s) y luego tarda 2000ms (2s) en rellenarse */
+          transition: stage >= 1 ? 'opacity 2000ms ease-in-out 1000ms' : 'opacity 500ms ease-out',
+        }}
+      ></div>
 
       {/* LA IMAGEN REVELADA */}
       <div 
-        className={`absolute inset-0 flex flex-col items-center justify-center p-4 sm:p-8 transition-all duration-[1500ms] ease-[cubic-bezier(0.4,0,0.2,1)] z-10 ${
-          stage === 4 ? 'opacity-100 scale-100' : 'opacity-0 scale-95 pointer-events-none'
+        className={`absolute inset-0 flex flex-col items-center justify-center p-4 sm:p-8 transition-all duration-[1500ms] ease-[cubic-bezier(0.4,0,0.2,1)] z-[70] ${
+          stage === 2 ? 'opacity-100 scale-100' : 'opacity-0 scale-95 pointer-events-none'
         }`}
-        style={{ visibility: stage === 4 ? 'visible' : 'hidden' }}
+        style={{ visibility: stage === 2 ? 'visible' : 'hidden' }}
       >
-        <div className="relative group max-w-full max-h-[80vh] sm:max-h-[88vh]">
+        <div className="relative group max-w-full max-h-[75vh] sm:max-h-[85vh]">
           <img 
             src={ENLACE_IMAGEN}
             alt="Invitación Gemma y Miguel" 
-            className="max-w-full max-h-full object-contain rounded-sm shadow-[0_30px_80px_rgba(0,0,0,0.9)]"
+            className="max-w-full max-h-full object-contain rounded-sm shadow-[0_20px_60px_rgba(0,0,0,0.15)]"
           />
         </div>
         
-        {/* BOTÓN DE DESCARGA (Estático y más pegado) */}
+        {/* BOTÓN DE DESCARGA */}
         <button 
           onClick={descargarImagen}
-          className={`mt-3 group flex items-center gap-2 px-5 py-2 bg-white/10 hover:bg-white/20 backdrop-blur-lg border border-white/10 hover:border-white/20 rounded-full text-white/80 hover:text-white font-serif-classic text-[10px] sm:text-xs tracking-[0.2em] uppercase transition-all duration-700 delay-[1200ms] shadow-xl hover:scale-105 active:scale-95 cursor-pointer ${
-            stage === 4 ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4 pointer-events-none'
+          className={`mt-6 group flex items-center gap-2 px-6 py-2.5 bg-white hover:bg-stone-50 border border-stone-200 rounded-full text-stone-600 hover:text-stone-800 font-serif-classic text-[10px] sm:text-xs tracking-[0.2em] uppercase transition-all duration-700 delay-[1000ms] shadow-md hover:scale-105 active:scale-95 cursor-pointer ${
+            stage === 2 ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4 pointer-events-none'
           }`}
         >
-          {/* Icono estático de descarga */}
-          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
-            <polyline points="7 10 12 15 17 10"/>
-            <line x1="12" x2="12" y1="15" y2="3"/>
-          </svg>
+          <div className="relative overflow-hidden w-3.5 h-3.5">
+            <svg 
+              className="absolute transition-transform duration-500 group-hover:translate-y-full"
+              xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"
+            >
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+              <polyline points="7 10 12 15 17 10"/>
+              <line x1="12" x2="12" y1="15" y2="3"/>
+            </svg>
+            <svg 
+              className="absolute -translate-y-full transition-transform duration-500 group-hover:translate-y-0"
+              xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"
+            >
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+              <polyline points="7 10 12 15 17 10"/>
+              <line x1="12" x2="12" y1="15" y2="3"/>
+            </svg>
+          </div>
           <span>Guardar Invitación</span>
         </button>
       </div>
 
-      {/* CONTENEDOR EXTERNO DE ANIMACIÓN */}
+      {/* CONTENEDOR EXTERNO DEL SOBRE */}
       <div
-        className="relative z-50 flex items-center justify-center transition-all duration-1000 ease-[cubic-bezier(0.5,0,0.2,1)]"
+        className="absolute inset-0 z-50 flex items-center justify-center transition-all duration-1000 ease-[cubic-bezier(0.5,0,0.2,1)]"
         style={{ 
           transformStyle: 'preserve-3d',
-          transform: stage === 4 ? 'translateY(120vh) rotate(-5deg)' : 'translateY(0) rotate(0deg)',
-          opacity: stage === 4 ? 0 : 1,
-          pointerEvents: stage === 4 ? 'none' : 'auto'
+          transform: stage === 2 ? 'translateY(120vh) rotate(-5deg)' : 'translateY(0) rotate(0deg)',
+          opacity: stage === 2 ? 0 : 1,
+          pointerEvents: stage >= 1 ? 'none' : 'auto',
+          visibility: stage === 2 ? 'hidden' : 'visible'
         }}
       >
         <div 
-          className="relative aspect-[1.45/1] w-[92vw] max-w-[800px] transition-transform duration-1000 mt-8"
+          className="relative aspect-[1.45/1] w-[92vw] min-w-[75vh] max-w-[800px] transition-transform duration-1000 macro-zoom"
           style={{ transformStyle: 'preserve-3d' }}
         >
           <div className="absolute inset-0 envelope-inside rounded-sm z-10"></div>
 
-          {/* SOLAPA IZQUIERDA */}
+          {/* SOLAPA IZQUIERDA (Inmóvil, la dejamos estática en rotateY 0) */}
           <div
-            className="absolute inset-0 transition-transform duration-1000 ease-[cubic-bezier(0.3,0,0.2,1)]"
+            className="absolute inset-0"
             style={{
               transformOrigin: 'left center',
-              transform: stage >= 3 ? 'rotateY(-180deg)' : 'rotateY(0deg)',
-              zIndex: stage >= 3 ? 12 : 20,
+              transform: 'rotateY(0deg)',
+              zIndex: 20,
               transformStyle: 'preserve-3d',
-              filter: stage >= 3 ? 'none' : 'drop-shadow(3px 0px 8px rgba(0,0,0,0.5))'
+              filter: 'drop-shadow(3px 0px 8px rgba(0,0,0,0.5))'
             }}
           >
-            <div className="absolute inset-0 theme-paper rounded-l-sm" style={{ clipPath: 'polygon(0 0, 15% 0, 46% 46%, 46% 54%, 15% 100%, 0 100%)', backfaceVisibility: 'hidden', WebkitBackfaceVisibility: 'hidden' }}>
+            <div className="absolute inset-0 theme-paper rounded-l-sm" style={{ clipPath: 'polygon(-1% -1%, 50.5% 50%, -1% 101%)', backfaceVisibility: 'hidden', WebkitBackfaceVisibility: 'hidden' }}>
               <div className="absolute inset-0 bg-gradient-to-r from-black/20 to-transparent"></div>
             </div>
-            <div className="absolute inset-0 flap-inside rounded-l-sm" style={{ transformOrigin: 'left center', transform: 'rotateY(180deg)', clipPath: 'polygon(0 0, 15% 0, 46% 46%, 46% 54%, 15% 100%, 0 100%)', backfaceVisibility: 'hidden', WebkitBackfaceVisibility: 'hidden' }}>
-            </div>
           </div>
 
-          {/* SOLAPA DERECHA */}
+          {/* SOLAPA DERECHA (Inmóvil) */}
           <div
-            className="absolute inset-0 transition-transform duration-1000 ease-[cubic-bezier(0.3,0,0.2,1)]"
+            className="absolute inset-0"
             style={{
               transformOrigin: 'right center',
-              transform: stage >= 3 ? 'rotateY(180deg)' : 'rotateY(0deg)',
-              zIndex: stage >= 3 ? 12 : 20,
+              transform: 'rotateY(0deg)',
+              zIndex: 20,
               transformStyle: 'preserve-3d',
-              filter: stage >= 3 ? 'none' : 'drop-shadow(-3px 0px 8px rgba(0,0,0,0.5))'
+              filter: 'drop-shadow(-3px 0px 8px rgba(0,0,0,0.5))'
             }}
           >
-            <div className="absolute inset-0 theme-paper rounded-r-sm" style={{ clipPath: 'polygon(100% 0, 85% 0, 54% 46%, 54% 54%, 85% 100%, 100% 100%)', backfaceVisibility: 'hidden', WebkitBackfaceVisibility: 'hidden' }}>
+            <div className="absolute inset-0 theme-paper rounded-r-sm" style={{ clipPath: 'polygon(101% -1%, 49.5% 50%, 101% 101%)', backfaceVisibility: 'hidden', WebkitBackfaceVisibility: 'hidden' }}>
               <div className="absolute inset-0 bg-gradient-to-l from-black/20 to-transparent"></div>
             </div>
-            <div className="absolute inset-0 flap-inside rounded-r-sm" style={{ transformOrigin: 'right center', transform: 'rotateY(180deg)', clipPath: 'polygon(100% 0, 85% 0, 54% 46%, 54% 54%, 85% 100%, 100% 100%)', backfaceVisibility: 'hidden', WebkitBackfaceVisibility: 'hidden' }}>
-            </div>
           </div>
 
-          {/* SOLAPA INFERIOR */}
+          {/* SOLAPA INFERIOR (Inmóvil pero incorpora la sombra dinámica de la apertura) */}
           <div
-            className="absolute inset-0 transition-transform duration-1000 ease-[cubic-bezier(0.3,0,0.2,1)]"
+            className="absolute inset-0"
             style={{
               transformOrigin: 'bottom center',
-              transform: stage >= 2 ? 'rotateX(-180deg)' : 'rotateX(0deg)',
-              zIndex: stage >= 2 ? 14 : 30,
+              transform: 'rotateX(0deg)',
+              zIndex: 30,
               transformStyle: 'preserve-3d',
-              filter: stage >= 2 ? 'none' : 'drop-shadow(0px -4px 10px rgba(0,0,0,0.6))'
+              filter: 'drop-shadow(0px -4px 10px rgba(0,0,0,0.6))'
             }}
           >
-            <div className="absolute inset-0 theme-paper rounded-b-sm" style={{ clipPath: 'polygon(0 100%, 100% 100%, 100% 85%, 56% 44%, 44% 44%, 0 85%)', backfaceVisibility: 'hidden', WebkitBackfaceVisibility: 'hidden' }}>
-              <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-white/10"></div>
-            </div>
-            <div className="absolute inset-0 flap-inside rounded-b-sm" style={{ transformOrigin: 'bottom center', transform: 'rotateX(180deg)', clipPath: 'polygon(0 100%, 100% 100%, 100% 85%, 56% 44%, 44% 44%, 0 85%)', backfaceVisibility: 'hidden', WebkitBackfaceVisibility: 'hidden' }}>
+            <div className="absolute inset-0 theme-paper rounded-b-sm" style={{ clipPath: 'polygon(-1% 101%, 101% 101%, 50% 49.5%)', backfaceVisibility: 'hidden', WebkitBackfaceVisibility: 'hidden' }}>
+              <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
+              
+              {/* Sombra dinámica de apertura que crece fluidamente junto a la tapa */}
+              <div 
+                className="absolute inset-0 bg-gradient-to-b from-black/80 to-transparent pointer-events-none"
+                style={{
+                  opacity: stage === 1 ? 1 : 0,
+                  transition: 'opacity 2000ms ease-out'
+                }}
+              ></div>
+
+              {/* TEXTO CALIGRÁFICO ANCLADO AL CENTRO */}
+              <div className="absolute left-0 right-0 flex flex-col items-center justify-center pointer-events-none invite-text-container" style={{ transform: 'rotate(-1.5deg)' }}>
+                <span className="font-script text-[#d4af37] opacity-80 invite-text-1" style={{ textShadow: '0.5px 0.5px 1px rgba(0,0,0,0.7)' }}>
+                  Te invitamos a nuestro gran día
+                </span>
+                <span className="font-script text-[#d4af37] opacity-80 invite-text-2 tracking-wide" style={{ textShadow: '0.5px 0.5px 1px rgba(0,0,0,0.7)' }}>
+                  24 . 04 . 2027
+                </span>
+              </div>
+
             </div>
           </div>
 
-          {/* SOLAPA SUPERIOR */}
+          {/* SOLAPA SUPERIOR (Apertura fluida hacia delante y Sello acoplado) */}
           <div
-            className="absolute inset-0 transition-transform duration-1000 ease-[cubic-bezier(0.3,0,0.2,1)]"
+            className="absolute inset-0 cursor-pointer"
             style={{
               transformOrigin: 'top center',
-              transform: stage >= 1 ? 'rotateX(180deg)' : 'rotateX(0deg)',
-              zIndex: stage >= 1 ? 16 : 40,
+              /* Cambio CLAVE: rotateX(-180deg) obliga al navegador a abrir la solapa siempre hacia fuera (hacia el usuario) */
+              transform: stage >= 1 ? 'rotateX(-180deg)' : 'rotateX(0deg)',
+              zIndex: 40,
               transformStyle: 'preserve-3d',
-              filter: stage >= 1 ? 'none' : 'drop-shadow(0px 8px 15px rgba(0,0,0,0.7))'
-            }}
-          >
-             <div className="absolute inset-0 theme-paper rounded-t-sm" style={{ clipPath: 'polygon(0 0, 100% 0, 100% 15%, 56% 56%, 44% 56%, 0 15%)', backfaceVisibility: 'hidden', WebkitBackfaceVisibility: 'hidden' }}>
-                <div className="absolute top-0 w-full h-12 bg-gradient-to-b from-white/10 to-transparent"></div>
-                <div className="absolute bottom-0 w-full h-1/2 bg-gradient-to-t from-black/30 to-transparent"></div>
-             </div>
-             <div className="absolute inset-0 flap-inside rounded-t-sm" style={{ transformOrigin: 'top center', transform: 'rotateX(180deg)', clipPath: 'polygon(0 0, 100% 0, 100% 15%, 56% 56%, 44% 56%, 0 15%)', backfaceVisibility: 'hidden', WebkitBackfaceVisibility: 'hidden' }}>
-             </div>
-          </div>
-
-          {/* SELLO DE CERA */}
-          <div
-            className="absolute left-1/2 z-50 transition-all duration-1000 ease-in-out cursor-pointer"
-            style={{
-              top: '55%',
-              transform: stage >= 1 ? 'translate(-50%, -200px) scale(0.8)' : 'translate(-50%, -50%) scale(1)',
-              opacity: stage >= 1 ? 0 : 1,
-              pointerEvents: stage >= 1 ? 'none' : 'auto'
+              /* Se usa ease-out para que responda instantáneamente al hacer clic */
+              transition: 'transform 2000ms ease-out',
+              /* Sombra constante para evitar que el navegador rompa el 3D */
+              filter: 'drop-shadow(0px 8px 15px rgba(0,0,0,0.6))'
             }}
             onClick={() => { if (stage === 0) setStage(1); }}
           >
-            <div className="custom-seal transform transition-transform duration-300 hover:scale-[1.03]">
-              <div className="custom-seal-inner">
-                <span className="stamped-text font-script pr-1">
-                  G<span className="text-sm md:text-lg mx-0.5">&</span>M
-                </span>
-              </div>
-            </div>
+             {/* Cara Frontal de la Solapa */}
+             <div className="absolute inset-0 theme-paper rounded-t-sm" style={{ clipPath: 'polygon(-1% -1%, 101% -1%, 50% 50.5%)', backfaceVisibility: 'hidden', WebkitBackfaceVisibility: 'hidden' }}>
+                <div className="absolute top-0 w-full h-12 bg-gradient-to-b from-white/10 to-transparent"></div>
+                <div className="absolute bottom-0 w-full h-1/2 bg-gradient-to-t from-black/30 to-transparent"></div>
+             </div>
+             
+             {/* Cara Interior de la Solapa */}
+             <div className="absolute inset-0 flap-inside rounded-t-sm" style={{ transformOrigin: 'top center', transform: 'rotateX(180deg)', clipPath: 'polygon(-1% -1%, 101% -1%, 50% 50.5%)', backfaceVisibility: 'hidden', WebkitBackfaceVisibility: 'hidden' }}>
+             </div>
+
+             {/* EL SELLO VIAJA FÍSICAMENTE PEGADO A LA SOLAPA FRONTAL */}
+             <div
+               className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
+               style={{ backfaceVisibility: 'hidden', WebkitBackfaceVisibility: 'hidden' }}
+             >
+                <div className="custom-seal transform transition-transform duration-300 hover:scale-[1.03]">
+                  <div className="custom-seal-inner">
+                    <span className="stamped-text font-script pr-1">
+                      G<span className="text-[0.8em] mx-0.5">&</span>M
+                    </span>
+                  </div>
+                </div>
+             </div>
           </div>
           
         </div>
