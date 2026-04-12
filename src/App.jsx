@@ -8,7 +8,7 @@ export default function CartaAntigua() {
   // 1. Sube tu precioso collage a https://postimages.org/
   // 2. Copia el "Enlace directo" (debe terminar en .jpg)
   // 3. Pégalo aquí abajo entre las comillas sustituyendo al de prueba:
-  const ENLACE_IMAGEN = "https://i.postimg.cc/MHdq9psT/24-04-2027.jpg";
+  const ENLACE_IMAGEN = "https://i.postimg.cc/XNw9G4mr/Gemini-Generated-Image-5rucma5rucma5ruc.png";
 
   // --- Cambiar título y favicon (icono de la pestaña) ---
   useEffect(() => {
@@ -34,9 +34,10 @@ export default function CartaAntigua() {
   // --- SECUENCIA DE APERTURA LENTA Y CINEMATOGRÁFICA ---
   useEffect(() => {
     if (stage === 1) {
-      // La solapa tarda 2s en abrirse. La pantalla blanca tarda 1s extra en rellenarse.
-      // Total de la secuencia antes de revelar la foto = 3 segundos (3000ms).
-      const timer = setTimeout(() => setStage(2), 3000);
+      // La solapa tarda ahora 4s en abrirse (mucho más lento). 
+      // La pantalla blanca tarda un poco más en rellenarse para acompañar.
+      // Total de la secuencia = 4.5 segundos (4500ms).
+      const timer = setTimeout(() => setStage(2), 4500);
       return () => clearTimeout(timer);
     }
   }, [stage]);
@@ -210,8 +211,8 @@ export default function CartaAntigua() {
         className="fixed inset-0 bg-white z-[60] pointer-events-none"
         style={{
           opacity: stage >= 1 ? 1 : 0,
-          /* Se enciende progresivamente. Espera 1000ms (1s) y luego tarda 2000ms (2s) en rellenarse */
-          transition: stage >= 1 ? 'opacity 2000ms ease-in-out 1000ms' : 'opacity 500ms ease-out',
+          /* Se enciende progresivamente más tarde (2000ms) y tarda más en rellenarse (2500ms) */
+          transition: stage >= 1 ? 'opacity 2500ms ease-in-out 2000ms' : 'opacity 500ms ease-out',
         }}
       ></div>
 
@@ -322,12 +323,12 @@ export default function CartaAntigua() {
             <div className="absolute inset-0 theme-paper rounded-b-sm" style={{ clipPath: 'polygon(-1% 101%, 101% 101%, 50% 49.5%)', backfaceVisibility: 'hidden', WebkitBackfaceVisibility: 'hidden' }}>
               <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
               
-              {/* Sombra dinámica de apertura que crece fluidamente junto a la tapa */}
+              {/* Sombra dinámica de apertura que crece fluidamente junto a la tapa (ahora más lento: 4000ms) */}
               <div 
                 className="absolute inset-0 bg-gradient-to-b from-black/80 to-transparent pointer-events-none"
                 style={{
                   opacity: stage === 1 ? 1 : 0,
-                  transition: 'opacity 2000ms ease-out'
+                  transition: 'opacity 4000ms ease-out'
                 }}
               ></div>
 
@@ -349,13 +350,11 @@ export default function CartaAntigua() {
             className="absolute inset-0 cursor-pointer"
             style={{
               transformOrigin: 'top center',
-              /* Cambio CLAVE: rotateX(-180deg) obliga al navegador a abrir la solapa siempre hacia fuera (hacia el usuario) */
               transform: stage >= 1 ? 'rotateX(-180deg)' : 'rotateX(0deg)',
               zIndex: 40,
               transformStyle: 'preserve-3d',
-              /* Se usa ease-out para que responda instantáneamente al hacer clic */
-              transition: 'transform 2000ms ease-out',
-              /* Sombra constante para evitar que el navegador rompa el 3D */
+              /* Se ha ralentizado la apertura a 4000ms (4 segundos) */
+              transition: 'transform 4000ms ease-out',
               filter: 'drop-shadow(0px 8px 15px rgba(0,0,0,0.6))'
             }}
             onClick={() => { if (stage === 0) setStage(1); }}
